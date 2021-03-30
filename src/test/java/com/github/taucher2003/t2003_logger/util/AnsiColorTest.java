@@ -19,48 +19,57 @@ package com.github.taucher2003.t2003_logger.util;
 
 import org.junit.jupiter.api.Test;
 
-import static com.github.taucher2003.t2003_logger.util.Colorizer.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ColorizerTest {
+class AnsiColorTest {
+
+    static final String RESET = "\u001B[0m",
+            BLACK = "\u001B[30m",
+            RED = "\u001B[31m",
+            GREEN = "\u001B[32m",
+            YELLOW = "\u001B[33m",
+            BLUE = "\u001B[34m",
+            PURPLE = "\u001B[35m",
+            CYAN = "\u001B[36m",
+            WHITE = "\u001B[37m";
 
     @Test
     void black() {
-        assertEquals(ANSI_BLACK + "message" + ANSI_RESET, Colorizer.black("message"));
+        assertEquals(BLACK + "message" + RESET, AnsiColor.BLACK.colorize("message"));
     }
 
     @Test
     void red() {
-        assertEquals(ANSI_RED + "message" + ANSI_RESET, Colorizer.red("message"));
+        assertEquals(RED + "message" + RESET, AnsiColor.RED.colorize("message"));
     }
 
     @Test
     void green() {
-        assertEquals(ANSI_GREEN + "message" + ANSI_RESET, Colorizer.green("message"));
+        assertEquals(GREEN + "message" + RESET, AnsiColor.GREEN.colorize("message"));
     }
 
     @Test
     void yellow() {
-        assertEquals(ANSI_YELLOW + "message" + ANSI_RESET, Colorizer.yellow("message"));
+        assertEquals(YELLOW + "message" + RESET, AnsiColor.YELLOW.colorize("message"));
     }
 
     @Test
     void blue() {
-        assertEquals(ANSI_BLUE + "message" + ANSI_RESET, Colorizer.blue("message"));
+        assertEquals(BLUE + "message" + RESET, AnsiColor.BLUE.colorize("message"));
     }
 
     @Test
     void purple() {
-        assertEquals(ANSI_PURPLE + "message" + ANSI_RESET, Colorizer.purple("message"));
+        assertEquals(PURPLE + "message" + RESET, AnsiColor.PURPLE.colorize("message"));
     }
 
     @Test
     void cyan() {
-        assertEquals(ANSI_CYAN + "message" + ANSI_RESET, Colorizer.cyan("message"));
+        assertEquals(CYAN + "message" + RESET, AnsiColor.CYAN.colorize("message"));
     }
 
     @Test
     void white() {
-        assertEquals(ANSI_WHITE + "message" + ANSI_RESET, Colorizer.white("message"));
+        assertEquals(WHITE + "message" + RESET, AnsiColor.WHITE.colorize("message"));
     }
 }

@@ -60,22 +60,27 @@ public class Formatter {
     private String formatDate() {
         Date date = new Date();
         DateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSS");
-        return Colorizer.white(format.format(date));
+        return AnsiColor.WHITE.colorize(format.format(date));
     }
 
     private String colorizeLevel(Level level) {
+        AnsiColor color = AnsiColor.RESET;
         switch (level) {
             case ERROR:
-                return Colorizer.red(level.name());
+                color = AnsiColor.RED;
+                break;
             case WARN:
-                return Colorizer.yellow(level.name());
+                color = AnsiColor.YELLOW;
+                break;
             case INFO:
-                return Colorizer.green(level.name());
+                color = AnsiColor.GREEN;
+                break;
             case DEBUG:
             case TRACE:
-                return Colorizer.blue(level.name());
+                color = AnsiColor.BLUE;
+                break;
         }
-        return "";
+        return color.colorize(level.name());
     }
 
     private String formatThread() {
@@ -88,15 +93,15 @@ public class Formatter {
         if(configuration.threadInBraces)
             name += "]";
 
-        return Colorizer.white(name);
+        return AnsiColor.WHITE.colorize(name);
     }
 
     private String formatName() {
-        return Colorizer.cyan(name);
+        return AnsiColor.CYAN.colorize(name);
     }
 
     private String formatMessage(String message) {
-        return Colorizer.white(message);
+        return AnsiColor.WHITE.colorize(message);
     }
 
     public static String format(String message, Object... objects) {
