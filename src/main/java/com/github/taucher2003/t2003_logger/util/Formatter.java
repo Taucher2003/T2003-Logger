@@ -19,8 +19,6 @@ package com.github.taucher2003.t2003_logger.util;
 
 import org.slf4j.event.Level;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Formatter {
@@ -59,27 +57,16 @@ public class Formatter {
 
     private String formatDate() {
         Date date = new Date();
-        DateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSS");
-        return AnsiColor.WHITE.colorize(format.format(date));
+        return configuration.useColors
+                ? configuration.colors.get(LoggerConfiguration.COLOR + "date").colorize(configuration.dateFormat.format(date))
+                : configuration.dateFormat.format(date);
     }
 
     private String colorizeLevel(Level level) {
-        AnsiColor color = AnsiColor.RESET;
-        switch (level) {
-            case ERROR:
-                color = AnsiColor.RED;
-                break;
-            case WARN:
-                color = AnsiColor.YELLOW;
-                break;
-            case INFO:
-                color = AnsiColor.GREEN;
-                break;
-            case DEBUG:
-            case TRACE:
-                color = AnsiColor.BLUE;
-                break;
-        }
+        if(!configuration.useColors)
+            return level.name();
+
+        AnsiColor color = configuration.colors.get(LoggerConfiguration.COLOR + "level." + level.name().toLowerCase());
         return color.colorize(level.name());
     }
 
@@ -93,15 +80,21 @@ public class Formatter {
         if(configuration.threadInBraces)
             name += "]";
 
-        return AnsiColor.WHITE.colorize(name);
+        return configuration.useColors
+                ? configuration.colors.get(LoggerConfiguration.COLOR + "thread").colorize(name)
+                : name;
     }
 
     private String formatName() {
-        return AnsiColor.CYAN.colorize(name);
+        return configuration.useColors
+                ? configuration.colors.get(LoggerConfiguration.COLOR + "name").colorize(name)
+                : name;
     }
 
     private String formatMessage(String message) {
-        return AnsiColor.WHITE.colorize(message);
+        return configuration.useColors
+                ? configuration.colors.get(LoggerConfiguration.COLOR + "message").colorize(message)
+                : message;
     }
 
     public static String format(String message, Object... objects) {
