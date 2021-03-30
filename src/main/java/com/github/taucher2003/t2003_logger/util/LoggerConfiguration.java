@@ -26,6 +26,13 @@ import java.io.PrintStream;
 
 public class LoggerConfiguration {
 
+    private static final String PREFIX = "logging.";
+    private static final String LOG_LEVEL = PREFIX + "level";
+    private static final String PRINT_STREAM = PREFIX + "printstream";
+    private static final String SHOW_DATE = PREFIX + "show_date";
+    private static final String SHOW_THREAD_NAME = PREFIX + "show_thread_name";
+    private static final String THREAD_IN_BRACES = PREFIX + "thread_name_in_braces";
+
     private Level logLevel;
     final String name;
     final PrintStream printStream;
@@ -36,15 +43,15 @@ public class LoggerConfiguration {
     public LoggerConfiguration(String name) {
         this.name = name;
         try {
-            this.logLevel = Level.valueOf(computeCustomSettings("LOG_LEVEL", "INFO"));
+            this.logLevel = Level.valueOf(computeCustomSettings(LOG_LEVEL, "INFO"));
         }catch(IllegalArgumentException | EnumConstantNotPresentException exception) {
             Util.report("Log Level has been set to an invalid value", exception);
             this.logLevel = Level.INFO;
         }
-        this.printStream = getPrintStream(computeCustomSettings("PRINT_STREAM", "System.err"));
-        this.showDate = Boolean.parseBoolean(computeCustomSettings("SHOW_DATE", "true"));
-        this.showThread = Boolean.parseBoolean(computeCustomSettings("SHOW_THREAD", "true"));
-        this.threadInBraces = Boolean.parseBoolean(computeCustomSettings("THREAD_IN_BRACES", "true"));
+        this.printStream = getPrintStream(computeCustomSettings(PRINT_STREAM, "System.err"));
+        this.showDate = Boolean.parseBoolean(computeCustomSettings(SHOW_DATE, "true"));
+        this.showThread = Boolean.parseBoolean(computeCustomSettings(SHOW_THREAD_NAME, "true"));
+        this.threadInBraces = Boolean.parseBoolean(computeCustomSettings(THREAD_IN_BRACES, "true"));
     }
 
     private String computeCustomSettings(String key, String ifAbsent) {
