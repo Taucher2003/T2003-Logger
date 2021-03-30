@@ -23,6 +23,9 @@ import org.slf4j.helpers.Util;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoggerConfiguration {
 
@@ -30,28 +33,45 @@ public class LoggerConfiguration {
     private static final String LOG_LEVEL = PREFIX + "level";
     private static final String PRINT_STREAM = PREFIX + "printstream";
     private static final String SHOW_DATE = PREFIX + "show_date";
+    private static final String DATE_FORMAT = PREFIX + "date_format";
     private static final String SHOW_THREAD_NAME = PREFIX + "show_thread_name";
     private static final String THREAD_IN_BRACES = PREFIX + "thread_name_in_braces";
+    private static final String USE_COLORS = PREFIX + "use_colors";
+    static final String COLOR = PREFIX + "color.";
 
     private Level logLevel;
     final String name;
     final PrintStream printStream;
     final boolean showDate;
+    final SimpleDateFormat dateFormat;
     final boolean showThread;
     final boolean threadInBraces;
+    final boolean useColors;
+    final Map<String, AnsiColor> colors = new HashMap<>();
 
     public LoggerConfiguration(String name) {
         this.name = name;
-        try {
-            this.logLevel = Level.valueOf(computeCustomSettings(LOG_LEVEL, "INFO"));
-        }catch(IllegalArgumentException | EnumConstantNotPresentException exception) {
-            Util.report("Log Level has been set to an invalid value", exception);
-            this.logLevel = Level.INFO;
-        }
+        this.logLevel = getEnum(LOG_LEVEL, Level.INFO);
         this.printStream = getPrintStream(computeCustomSettings(PRINT_STREAM, "System.err"));
         this.showDate = Boolean.parseBoolean(computeCustomSettings(SHOW_DATE, "true"));
+        this.dateFormat = new SimpleDateFormat(computeCustomSettings(DATE_FORMAT, "dd.MM.yyyy HH:mm:ss.SSS"));
         this.showThread = Boolean.parseBoolean(computeCustomSettings(SHOW_THREAD_NAME, "true"));
         this.threadInBraces = Boolean.parseBoolean(computeCustomSettings(THREAD_IN_BRACES, "true"));
+        this.useColors = Boolean.parseBoolean(computeCustomSettings(USE_COLORS, "true"));
+
+        loadCustomColors();
+    }
+
+    private void loadCustomColors() {
+        colors.put(COLOR + "date", getEnum(COLOR + "date", AnsiColor.WHITE));
+        colors.put(COLOR + "level.error", getEnum(COLOR + "level.error", AnsiColor.RED));
+        colors.put(COLOR + "level.warn", getEnum(COLOR + "level.warn", AnsiColor.YELLOW));
+        colors.put(COLOR + "level.info", getEnum(COLOR + "level.info", AnsiColor.GREEN));
+        colors.put(COLOR + "level.debug", getEnum(COLOR + "level.debug", AnsiColor.BLUE));
+        colors.put(COLOR + "level.trace", getEnum(COLOR + "level.trace", AnsiColor.BLUE));
+        colors.put(COLOR + "thread", getEnum(COLOR + "thread", AnsiColor.PURPLE));
+        colors.put(COLOR + "name", getEnum(COLOR + "name", AnsiColor.CYAN));
+        colors.put(COLOR + "message", getEnum(COLOR + "message", AnsiColor.WHITE));
     }
 
     private String computeCustomSettings(String key, String ifAbsent) {
@@ -79,6 +99,16 @@ public class LoggerConfiguration {
             System.err.println("Could not open print stream (" + file + ")");
             return System.err;
         }
+    }
+
+    private <T extends Enum<T>> T getEnum(String key, T defaultValue) {
+        String value = computeCustomSettings(key, defaultValue.name());
+        try {
+            return Enum.valueOf(defaultValue.getDeclaringClass(), value);
+        }catch(IllegalArgumentException | EnumConstantNotPresentException exception) {
+            Util.report("Enum choice [" + key + "] was set to an invalid value", exception);
+        }
+        return defaultValue;
     }
 
     public Level getLogLevel() {
