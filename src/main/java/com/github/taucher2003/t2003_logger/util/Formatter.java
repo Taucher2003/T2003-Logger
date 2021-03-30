@@ -75,7 +75,7 @@ public class Formatter {
         if(configuration.threadInBraces)
             name = "[";
 
-        name += Thread.currentThread().getName();
+        name += shortenThreadName(Thread.currentThread().getName());
 
         if(configuration.threadInBraces)
             name += "]";
@@ -83,6 +83,16 @@ public class Formatter {
         return configuration.useColors
                 ? configuration.colors.get(LoggerConfiguration.COLOR + "thread").colorize(name)
                 : name;
+    }
+
+    public String shortenThreadName(String name) {
+        if(name.length() <= configuration.threadMaxLength)
+            return name;
+
+        int length = name.length();
+        int firstSubEnd = (configuration.threadMaxLength / 2) - 1;
+        int secondSubStart = length - (configuration.threadMaxLength / 2) + 2;
+        return name.substring(0, firstSubEnd) + "..." + name.substring(secondSubStart, length);
     }
 
     private String formatName() {

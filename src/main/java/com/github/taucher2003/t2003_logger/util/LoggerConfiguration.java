@@ -36,6 +36,7 @@ public class LoggerConfiguration {
     private static final String DATE_FORMAT = PREFIX + "date_format";
     private static final String SHOW_THREAD_NAME = PREFIX + "show_thread_name";
     private static final String THREAD_IN_BRACES = PREFIX + "thread_name_in_braces";
+    private static final String THREAD_NAME_MAX_LENGTH = PREFIX + "thread_name_max_length";
     private static final String USE_COLORS = PREFIX + "use_colors";
     static final String COLOR = PREFIX + "color.";
 
@@ -46,6 +47,7 @@ public class LoggerConfiguration {
     final SimpleDateFormat dateFormat;
     final boolean showThread;
     final boolean threadInBraces;
+    final int threadMaxLength;
     final boolean useColors;
     final Map<String, AnsiColor> colors = new HashMap<>();
 
@@ -57,6 +59,7 @@ public class LoggerConfiguration {
         this.dateFormat = new SimpleDateFormat(computeCustomSettings(DATE_FORMAT, "dd.MM.yyyy HH:mm:ss.SSS"));
         this.showThread = Boolean.parseBoolean(computeCustomSettings(SHOW_THREAD_NAME, "true"));
         this.threadInBraces = Boolean.parseBoolean(computeCustomSettings(THREAD_IN_BRACES, "true"));
+        this.threadMaxLength = getInt(THREAD_NAME_MAX_LENGTH, 16);
         this.useColors = Boolean.parseBoolean(computeCustomSettings(USE_COLORS, "true"));
 
         loadCustomColors();
@@ -107,6 +110,18 @@ public class LoggerConfiguration {
             return Enum.valueOf(defaultValue.getDeclaringClass(), value);
         }catch(IllegalArgumentException | EnumConstantNotPresentException exception) {
             Util.report("Enum choice [" + key + "] was set to an invalid value", exception);
+        }
+        return defaultValue;
+    }
+
+    private int getInt(String key, int defaultValue) {
+        String value = computeCustomSettings(key, null);
+        if(value == null)
+            return defaultValue;
+        try {
+            return Integer.parseInt(value);
+        }catch(NumberFormatException exception) {
+            Util.report("Integer choice [" + key + "] was set to an invalid value", exception);
         }
         return defaultValue;
     }
