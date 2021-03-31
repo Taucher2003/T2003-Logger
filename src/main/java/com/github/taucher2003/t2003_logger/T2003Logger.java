@@ -233,4 +233,8 @@ public class T2003Logger extends MarkerIgnoringBase {
         if (isErrorEnabled())
             log(ERROR, msg, t);
     }
+
+    public Formatter getFormatter() {
+        return formatter;
+    }
 }
