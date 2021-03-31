@@ -38,7 +38,13 @@ class FormatterTest {
     @Test
     void shortenThreadName() {
         T2003Logger logger = (T2003Logger) LoggerFactory.getLogger(FormatterTest.class);
-        String threadName = "SomeReallyLongThreadNameThatDoesntMakeAnySense";
-        assertEquals("SomeRea...ySense", logger.getFormatter().shortenThreadName(threadName));
+        String longThreadName = "SomeReallyLongThreadNameThatDoesntMakeAnySense";
+        String threadName = "Thats17Characters";
+        assertEquals("SomeRea...ySense", logger.getFormatter().shortenThreadName(longThreadName));
+        assertEquals("Thats17...acters", logger.getFormatter().shortenThreadName(threadName));
+
+        logger = (T2003Logger) LoggerFactory.getLogger(AnsiColorTest.class);
+        assertEquals("SomeReal...ySense", logger.getFormatter().shortenThreadName(longThreadName));
+        assertEquals("Thats17Characters", logger.getFormatter().shortenThreadName(threadName));
     }
 }

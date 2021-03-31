@@ -90,7 +90,9 @@ public class Formatter {
             return name;
 
         int length = name.length();
-        int firstSubEnd = (configuration.threadMaxLength / 2) - 1;
+        int firstSubEnd = (configuration.threadMaxLength / 2);
+        if(configuration.threadMaxLength % 2 == 0)
+            firstSubEnd -= 1;
         int secondSubStart = length - (configuration.threadMaxLength / 2) + 2;
         return name.substring(0, firstSubEnd) + "..." + name.substring(secondSubStart, length);
     }
