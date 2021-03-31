@@ -38,4 +38,8 @@ public enum AnsiColor {
     public String colorize(String string) {
         return ansi + string + RESET.ansi;
     }
+
+    public static String stripColors(String coloredString) {
+        return coloredString.replaceAll("(\u001B\\[0m)|(\u001B\\[3[0-7]m)", "");
+    }
 }

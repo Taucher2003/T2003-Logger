@@ -20,18 +20,22 @@ package com.github.taucher2003.t2003_logger.util;
 import org.slf4j.event.Level;
 import org.slf4j.helpers.Util;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class LoggerConfiguration {
 
     private static final String PREFIX = "logging.";
     private static final String LOG_LEVEL = PREFIX + "level";
     private static final String PRINT_STREAM = PREFIX + "printstream";
+    private static final String FILE = PREFIX + "file";
+    private static final String STRIP_COLORS_FOR_FILE = PREFIX + "file_strip_colors";
     private static final String SHOW_DATE = PREFIX + "show_date";
     private static final String DATE_FORMAT = PREFIX + "date_format";
     private static final String SHOW_THREAD_NAME = PREFIX + "show_thread_name";
@@ -40,9 +44,13 @@ public class LoggerConfiguration {
     private static final String USE_COLORS = PREFIX + "use_colors";
     static final String COLOR = PREFIX + "color.";
 
+    private static final Map<String, Path> PATHS = new ConcurrentHashMap<>();
+
     private Level logLevel;
     final String name;
     final PrintStream printStream;
+    final Path path;
+    final boolean stripColorsForFile;
     final boolean showDate;
     final SimpleDateFormat dateFormat;
     final boolean showThread;
@@ -55,6 +63,8 @@ public class LoggerConfiguration {
         this.name = name;
         this.logLevel = getEnum(LOG_LEVEL, Level.INFO);
         this.printStream = getPrintStream(computeCustomSettings(PRINT_STREAM, "System.err"));
+        this.path = getPath(computeCustomSettings(FILE, null));
+        this.stripColorsForFile = Boolean.parseBoolean(computeCustomSettings(STRIP_COLORS_FOR_FILE, "true"));
         this.showDate = Boolean.parseBoolean(computeCustomSettings(SHOW_DATE, "true"));
         this.dateFormat = new SimpleDateFormat(computeCustomSettings(DATE_FORMAT, "dd.MM.yyyy HH:mm:ss.SSS"));
         this.showThread = Boolean.parseBoolean(computeCustomSettings(SHOW_THREAD_NAME, "true"));
@@ -89,19 +99,31 @@ public class LoggerConfiguration {
         return value == null ? ifAbsent : value;
     }
 
-    private PrintStream getPrintStream(String file) {
-        if(file.equalsIgnoreCase("System.out"))
+    private PrintStream getPrintStream(String stream) {
+        if(stream == null || stream.equalsIgnoreCase("null"))
+            return null;
+        if(stream.equalsIgnoreCase("System.out"))
             return System.out;
-        if(file.equalsIgnoreCase("System.err"))
+        if(stream.equalsIgnoreCase("System.err"))
             return System.err;
+        return null;
+    }
 
-        try {
-            FileOutputStream outputStream = new FileOutputStream(file);
-            return new PrintStream(outputStream);
-        } catch(FileNotFoundException ignored) {
-            System.err.println("Could not open print stream (" + file + ")");
-            return System.err;
-        }
+    private Path getPath(String fileName) {
+        if(fileName == null || fileName.equalsIgnoreCase("null"))
+            return null;
+
+        return PATHS.computeIfAbsent(fileName, ignored -> {
+            try {
+                File file = new File(fileName);
+                if(!file.exists())
+                    file.createNewFile();
+                return file.toPath();
+            } catch (IOException exception) {
+                Util.report("Failed to open File Output Stream", exception);
+            }
+            return null;
+        });
     }
 
     private <T extends Enum<T>> T getEnum(String key, T defaultValue) {
@@ -136,5 +158,13 @@ public class LoggerConfiguration {
 
     public PrintStream getPrintStream() {
         return printStream;
+    }
+
+    public Path getPath() {
+        return path;
+    }
+
+    public boolean isStripColorsForFile() {
+        return stripColorsForFile;
     }
 }
