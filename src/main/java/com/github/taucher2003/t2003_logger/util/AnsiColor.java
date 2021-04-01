@@ -40,6 +40,6 @@ public enum AnsiColor {
     }
 
     public static String stripColors(String coloredString) {
-        return coloredString.replaceAll("(\u001B\\[0m)|(\u001B\\[3[0-7]m)", "");
+        return coloredString.replaceAll("\u001B\\[(0|3[0-7])m", "");
     }
 }
