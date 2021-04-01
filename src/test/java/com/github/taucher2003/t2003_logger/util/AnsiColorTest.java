@@ -72,4 +72,14 @@ class AnsiColorTest {
     void white() {
         assertEquals(WHITE + "message" + RESET, AnsiColor.WHITE.colorize("message"));
     }
+
+    @Test
+    void stripColors() {
+        for(AnsiColor color : AnsiColor.values()) {
+            String coloredString = color.colorize("message");
+            assertEquals(color.ansi + "message" + AnsiColor.RESET.ansi, coloredString);
+            String stripped = AnsiColor.stripColors(coloredString);
+            assertEquals("message", stripped);
+        }
+    }
 }
