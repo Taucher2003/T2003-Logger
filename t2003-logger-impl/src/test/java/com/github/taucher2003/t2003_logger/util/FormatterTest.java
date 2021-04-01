@@ -19,7 +19,6 @@ package com.github.taucher2003.t2003_logger.util;
 
 import com.github.taucher2003.t2003_logger.T2003Logger;
 import org.junit.jupiter.api.Test;
-import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -37,13 +36,13 @@ class FormatterTest {
 
     @Test
     void shortenThreadName() {
-        T2003Logger logger = (T2003Logger) LoggerFactory.getLogger(FormatterTest.class);
+        T2003Logger logger = new T2003Logger(FormatterTest.class.getCanonicalName());
         String longThreadName = "SomeReallyLongThreadNameThatDoesntMakeAnySense";
         String threadName = "Thats17Characters";
         assertEquals("SomeRea...ySense", logger.getFormatter().shortenThreadName(longThreadName));
         assertEquals("Thats17...acters", logger.getFormatter().shortenThreadName(threadName));
 
-        logger = (T2003Logger) LoggerFactory.getLogger(AnsiColorTest.class);
+        logger = new T2003Logger(AnsiColorTest.class.getCanonicalName());
         assertEquals("SomeReal...ySense", logger.getFormatter().shortenThreadName(longThreadName));
         assertEquals("Thats17Characters", logger.getFormatter().shortenThreadName(threadName));
     }

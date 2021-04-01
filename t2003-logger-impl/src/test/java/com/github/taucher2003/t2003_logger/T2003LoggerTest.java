@@ -17,28 +17,34 @@
 
 package com.github.taucher2003.t2003_logger;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class T2003LoggerTest {
 
+    T2003LoggerFactory factory;
+
+    @BeforeEach
+    void init() {
+        factory = new T2003LoggerFactory();
+    }
+
     @Test
     void level() {
-        Logger logger = LoggerFactory.getLogger(T2003LoggerTest.class);
-        ((T2003Logger)logger).setLevel(Level.DEBUG);
-        assertEquals(Level.DEBUG, ((T2003Logger)LoggerFactory.getLogger(T2003LoggerTest.class)).getLevel());
-        assertEquals(Level.INFO, ((T2003Logger)LoggerFactory.getLogger(T2003Logger.class)).getLevel());
+        T2003Logger logger = (T2003Logger) factory.getLogger(T2003LoggerTest.class.getCanonicalName());
+        logger.setLevel(Level.DEBUG);
+        assertEquals(Level.DEBUG, ((T2003Logger) factory.getLogger(T2003LoggerTest.class.getCanonicalName())).getLevel());
+        assertEquals(Level.INFO, ((T2003Logger) factory.getLogger(T2003Logger.class.getCanonicalName())).getLevel());
     }
 
     @Test
     void levelFile() {
-        Logger logger = LoggerFactory.getLogger(T2003LoggerTest.class);
-        assertEquals(Level.TRACE, ((T2003Logger)logger).getLevel());
-        logger = LoggerFactory.getLogger(T2003Logger.class);
-        assertEquals(Level.INFO, ((T2003Logger)logger).getLevel());
+        T2003Logger logger = (T2003Logger) factory.getLogger(T2003LoggerTest.class.getCanonicalName());
+        assertEquals(Level.TRACE, logger.getLevel());
+        logger = (T2003Logger) factory.getLogger(T2003Logger.class.getCanonicalName());
+        assertEquals(Level.INFO, logger.getLevel());
     }
 }
