@@ -6,9 +6,9 @@ It has many options for configuration which will be listed below.
 ## 🚩 Table of Contents
 
 <ol>
-    <li><a href="#⚡-installation">Installation</a></li>
-    <li><a href="#⚙-configuration">Configuration</a></li>
-    <li><a href="#🔮-contributing">Contributing</a></li>
+    <li><a href="#-installation">Installation</a></li>
+    <li><a href="#-configuration">Configuration</a></li>
+    <li><a href="#-contributing">Contributing</a></li>
 </ol>
 
 ## ⚡ Installation
