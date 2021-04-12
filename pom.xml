@@ -22,8 +22,12 @@
 
     <groupId>com.github.taucher2003</groupId>
     <artifactId>t2003-logger</artifactId>
-    <version>1.0.0</version>
-    <packaging>jar</packaging>
+    <version>1.0.1</version>
+    <modules>
+        <module>t2003-logger-binder</module>
+        <module>t2003-logger-impl</module>
+    </modules>
+    <packaging>pom</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -31,11 +35,11 @@
 
     <name>T2003-Logger</name>
     <description>A SLF4J Logger implementation</description>
-    <url>http://github.com/Taucher2003/T2003-Logger</url>
+    <url>https://github.com/Taucher2003/T2003-Logger</url>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
     <developers>
@@ -43,13 +47,13 @@
             <name>Niklas van Schrick</name>
             <email>mc.taucher2003@gmail.com</email>
             <organization>com.github.taucher2003</organization>
-            <organizationUrl>http://www.github.com/Taucher2003</organizationUrl>
+            <organizationUrl>https://www.github.com/Taucher2003</organizationUrl>
         </developer>
     </developers>
     <scm>
         <connection>scm:git:git://github.com/Taucher2003/T2003-Logger.git</connection>
         <developerConnection>scm:git:ssh://github.com:Taucher2003/T2003-Logger.git</developerConnection>
-        <url>http://github.com/Taucher2003/T2003-Logger/tree/master</url>
+        <url>https://github.com/Taucher2003/T2003-Logger/tree/master</url>
     </scm>
 
     <distributionManagement>
