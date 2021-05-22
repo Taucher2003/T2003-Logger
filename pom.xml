@@ -22,7 +22,7 @@
 
     <groupId>com.github.taucher2003</groupId>
     <artifactId>t2003-logger</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
     <modules>
         <module>t2003-logger-binder</module>
         <module>t2003-logger-impl</module>

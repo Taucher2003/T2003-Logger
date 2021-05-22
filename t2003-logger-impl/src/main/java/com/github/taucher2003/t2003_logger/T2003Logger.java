@@ -33,12 +33,15 @@ import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.slf4j.event.Level.*;
 
 public class T2003Logger extends MarkerIgnoringBase {
 
     private static final long serialVersionUID = -632788891211436180L;
+    private static final ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool();
 
     private final LoggerConfiguration configuration;
     private final Formatter formatter;
@@ -53,10 +56,12 @@ public class T2003Logger extends MarkerIgnoringBase {
     }
 
     public void log(Level level, String message, Throwable t) {
-        String format = formatter.format(level, message);
-        log(configuration.getPrintStream(), format, t);
-        if(configuration.getPath() != null)
-            log(configuration.getPath(), format, t);
+        EXECUTOR_SERVICE.execute(() -> {
+            String format = formatter.format(level, message);
+            log(configuration.getPrintStream(), format, t);
+            if(configuration.getPath() != null)
+                log(configuration.getPath(), format, t);
+        });
     }
 
     private void log(PrintStream stream, String formatted, Throwable t) {
