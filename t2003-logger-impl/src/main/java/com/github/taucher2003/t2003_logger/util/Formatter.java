@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Niklas van Schrick and the T2003-Logger contributors
+ * Copyright 2022 Niklas van Schrick and the T2003-Logger contributors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -107,14 +107,6 @@ public class Formatter {
         return configuration.useColors
                 ? configuration.colors.get(LoggerConfiguration.COLOR + "message").colorize(message)
                 : message;
-    }
-
-    public static String format(String message, Object... objects) {
-        String result = message;
-        for(Object object : objects) {
-            result = result.replaceFirst("\\{}", String.valueOf(object));
-        }
-        return result;
     }
 }
 

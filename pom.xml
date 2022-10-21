@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2021 Niklas van Schrick and the T2003-Logger contributors
+  ~ Copyright 2022 Niklas van Schrick and the T2003-Logger contributors
   ~
   ~  Licensed under the Apache License, Version 2.0 (the "License");
   ~  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 
     <groupId>com.github.taucher2003</groupId>
     <artifactId>t2003-logger</artifactId>
-    <version>1.1.0</version>
+    <version>1.0.2</version>
     <modules>
         <module>t2003-logger-binder</module>
         <module>t2003-logger-impl</module>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Niklas van Schrick and the T2003-Logger contributors
+ * Copyright 2022 Niklas van Schrick and the T2003-Logger contributors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,18 +21,8 @@ import com.github.taucher2003.t2003_logger.T2003Logger;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class FormatterTest {
-
-    @Test
-    void format() {
-        String message = "Object1 {} Object2 {} {}";
-        assertEquals("Object1 hello Object2 world {}", Formatter.format(message, "hello", "world"));
-        assertEquals("Object1 hello Object2 world !", Formatter.format(message, "hello", "world", "!"));
-        assertNotEquals("Object1 hello Object2 world ", Formatter.format(message, "hello", "world"));
-        assertNotEquals("Object1 hello Object2 world {}", Formatter.format(message, "hello", "world", "!"));
-    }
 
     @Test
     void shortenThreadName() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Niklas van Schrick and the T2003-Logger contributors
+ * Copyright 2022 Niklas van Schrick and the T2003-Logger contributors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,7 +21,9 @@ import com.github.taucher2003.t2003_logger.util.AnsiColor;
 import com.github.taucher2003.t2003_logger.util.Formatter;
 import com.github.taucher2003.t2003_logger.util.LoggerConfiguration;
 import org.slf4j.event.Level;
+import org.slf4j.helpers.FormattingTuple;
 import org.slf4j.helpers.MarkerIgnoringBase;
+import org.slf4j.helpers.MessageFormatter;
 import org.slf4j.helpers.Util;
 
 import java.io.IOException;
@@ -33,15 +35,16 @@ import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-import static org.slf4j.event.Level.*;
+import static org.slf4j.event.Level.DEBUG;
+import static org.slf4j.event.Level.ERROR;
+import static org.slf4j.event.Level.INFO;
+import static org.slf4j.event.Level.TRACE;
+import static org.slf4j.event.Level.WARN;
 
 public class T2003Logger extends MarkerIgnoringBase {
 
     private static final long serialVersionUID = -632788891211436180L;
-    private static final ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool();
 
     private final LoggerConfiguration configuration;
     private final Formatter formatter;
@@ -52,14 +55,18 @@ public class T2003Logger extends MarkerIgnoringBase {
     }
 
     public void log(Level level, String message) {
-        log(level, message, null);
+        log(level, new FormattingTuple(message));
     }
 
-    public void log(Level level, String message, Throwable t) {
-        String format = formatter.format(level, message);
-        log(configuration.getPrintStream(), format, t);
+    public void log(Level level, String message, Throwable throwable) {
+        log(level, new FormattingTuple(message, null, throwable));
+    }
+
+    public void log(Level level, FormattingTuple formattingTuple) {
+        String format = formatter.format(level, formattingTuple.getMessage());
+        log(configuration.getPrintStream(), format, formattingTuple.getThrowable());
         if(configuration.getPath() != null)
-            log(configuration.getPath(), format, t);
+            log(configuration.getPath(), format, formattingTuple.getThrowable());
     }
 
     private void log(PrintStream stream, String formatted, Throwable t) {
@@ -158,19 +165,19 @@ public class T2003Logger extends MarkerIgnoringBase {
     @Override
     public void trace(String format, Object arg) {
         if (isTraceEnabled())
-            log(TRACE, Formatter.format(format, arg));
+            log(TRACE, MessageFormatter.format(format, arg));
     }
 
     @Override
     public void trace(String format, Object arg1, Object arg2) {
         if (isTraceEnabled())
-            log(TRACE, Formatter.format(format, arg1, arg2));
+            log(TRACE, MessageFormatter.format(format, arg1, arg2));
     }
 
     @Override
     public void trace(String format, Object... arguments) {
         if (isTraceEnabled())
-            log(TRACE, Formatter.format(format, arguments));
+            log(TRACE, MessageFormatter.arrayFormat(format, arguments));
     }
 
     @Override
@@ -193,19 +200,19 @@ public class T2003Logger extends MarkerIgnoringBase {
     @Override
     public void debug(String format, Object arg) {
         if (isDebugEnabled())
-            log(DEBUG, Formatter.format(format, arg));
+            log(DEBUG, MessageFormatter.format(format, arg));
     }
 
     @Override
     public void debug(String format, Object arg1, Object arg2) {
         if (isDebugEnabled())
-            log(DEBUG, Formatter.format(format, arg1, arg2));
+            log(DEBUG, MessageFormatter.format(format, arg1, arg2));
     }
 
     @Override
     public void debug(String format, Object... arguments) {
         if (isDebugEnabled())
-            log(DEBUG, Formatter.format(format, arguments));
+            log(DEBUG, MessageFormatter.arrayFormat(format, arguments));
     }
 
     @Override
@@ -228,19 +235,19 @@ public class T2003Logger extends MarkerIgnoringBase {
     @Override
     public void info(String format, Object arg) {
         if (isInfoEnabled())
-            log(INFO, Formatter.format(format, arg));
+            log(INFO, MessageFormatter.format(format, arg));
     }
 
     @Override
     public void info(String format, Object arg1, Object arg2) {
         if (isInfoEnabled())
-            log(INFO, Formatter.format(format, arg1, arg2));
+            log(INFO, MessageFormatter.format(format, arg1, arg2));
     }
 
     @Override
     public void info(String format, Object... arguments) {
         if (isInfoEnabled())
-            log(INFO, Formatter.format(format, arguments));
+            log(INFO, MessageFormatter.arrayFormat(format, arguments));
     }
 
     @Override
@@ -263,19 +270,19 @@ public class T2003Logger extends MarkerIgnoringBase {
     @Override
     public void warn(String format, Object arg) {
         if (isWarnEnabled())
-            log(WARN, Formatter.format(format, arg));
+            log(WARN, MessageFormatter.format(format, arg));
     }
 
     @Override
     public void warn(String format, Object arg1, Object arg2) {
         if (isWarnEnabled())
-            log(WARN, Formatter.format(format, arg1, arg2));
+            log(WARN, MessageFormatter.format(format, arg1, arg2));
     }
 
     @Override
     public void warn(String format, Object... arguments) {
         if (isWarnEnabled())
-            log(WARN, Formatter.format(format, arguments));
+            log(WARN, MessageFormatter.arrayFormat(format, arguments));
     }
 
     @Override
@@ -298,19 +305,19 @@ public class T2003Logger extends MarkerIgnoringBase {
     @Override
     public void error(String format, Object arg) {
         if (isErrorEnabled())
-            log(ERROR, Formatter.format(format, arg));
+            log(ERROR, MessageFormatter.format(format, arg));
     }
 
     @Override
     public void error(String format, Object arg1, Object arg2) {
         if (isErrorEnabled())
-            log(ERROR, Formatter.format(format, arg1, arg2));
+            log(ERROR, MessageFormatter.format(format, arg1, arg2));
     }
 
     @Override
     public void error(String format, Object... arguments) {
         if (isErrorEnabled())
-            log(ERROR, Formatter.format(format, arguments));
+            log(ERROR, MessageFormatter.arrayFormat(format, arguments));
     }
 
     @Override
