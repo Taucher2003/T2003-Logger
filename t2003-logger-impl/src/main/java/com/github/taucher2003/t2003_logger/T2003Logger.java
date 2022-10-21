@@ -56,12 +56,10 @@ public class T2003Logger extends MarkerIgnoringBase {
     }
 
     public void log(Level level, String message, Throwable t) {
-        EXECUTOR_SERVICE.execute(() -> {
-            String format = formatter.format(level, message);
-            log(configuration.getPrintStream(), format, t);
-            if(configuration.getPath() != null)
-                log(configuration.getPath(), format, t);
-        });
+        String format = formatter.format(level, message);
+        log(configuration.getPrintStream(), format, t);
+        if(configuration.getPath() != null)
+            log(configuration.getPath(), format, t);
     }
 
     private void log(PrintStream stream, String formatted, Throwable t) {
